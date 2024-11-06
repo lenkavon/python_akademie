@@ -57,20 +57,44 @@ print(f"We have {len(TEXTS)} texts to be analyzed.")
 
 print(delimiter)
 
-text_no = int(input("Enter a number btw. 1 and 3 to select: "))
-if text_no not in range(1, 4):
+selected_text = input("Enter a number btw. 1 and 3 to select: ")
+if not selected_text.isdigit() or int(selected_text) not in range(1, 4):
   print("Invalid number, terminating the program..")
   exit()
 
+text_idx = int(selected_text) - 1
 print(delimiter)
 
-text = TEXTS[text_no - 1]
-word_count = len(text.split())
+text = TEXTS[text_idx]
+text_array = text.split()
+word_count = len(text_array)
+
+stats = {
+  "titlecase": 0,
+  "uppercase": 0,
+  "lowercase": 0,
+  "numeric": 0,
+}
+
+for word in text_array:
+  if word.istitle():
+    stats["titlecase"] += 1
+  if word.isupper() and word.isalpha():
+    stats["uppercase"] += 1
+  if word.islower():
+    stats["lowercase"] += 1
+  if word.isdigit():
+    stats["numeric"] += 1
+
+
 print(f"There are {word_count} words in the selected text.")
-print(f"There are {sum(1 for word in text.split() if word.istitle())} titlecase words.")
-print(f"There are {sum(1 for word in text.split() if word.isupper())} uppercase words.")
-print(f"There are {sum(1 for word in text.split() if word.islower())} lowercase words.")
-print(f"There are {sum(1 for word in text.split() if word.isdigit())} numeric strings.")
+
+for key, value in stats.items():
+  if key == "numeric":
+    print(f"There are {value} numeric strings.")
+  else:
+    print(f"There are {value} {key} words.")
+
 print(f"The sum of all the numbers {sum(int(word) for word in text.split() if word.isdigit())}.")
 
 print(delimiter)
@@ -82,18 +106,7 @@ for word in text.split():
 
 sorted_frequency = dict(sorted(frequency.items()))
 
-# verze pred zjistenim existence center()
-
-# print(f"LEN\t| OCCURENCIES \t| NR.")
-# print(delimiter)
-
-# for word, count in sorted_frequency.items():
-#   tabs = '\t'
-#   if count < 5: 
-#     tabs="\t\t"
-#   print(f"{word}\t| {'*' * count} {tabs}| {count}")
-
-print("LEN ".center(4)+ "|" + "OCCURENCIES".center(30) + "|" " NR.".center(4))
+print("LEN ".center(4) + "|" + "OCCURENCIES".center(30) + "|" " NR.".center(4))
 print(delimiter)
 
 for word, count in sorted_frequency.items():
